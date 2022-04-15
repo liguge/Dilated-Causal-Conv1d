@@ -24,8 +24,9 @@ class CausalDilationConv1d(nn.Conv1d):
 
         self.__padding = (kernel_size - 1) * dilation
 
-    def forward(self, input):
-        return super(CausalDilationConv1d, self).forward(F.pad(input, (self.__padding, 0)))
+    def forward(self, x):
+        return super(CausalDilationConv1d, self).forward(F.pad(x, (self.__padding, 0)))
+    
 if __name__ == '__main__':
     input = torch.from_numpy(np.ones((3, 2, 5))).float()
     CaConv1d = CausalDilationConv1d(in_channels=2, out_channels=6, kernel_size=2, dilation=1)
