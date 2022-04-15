@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-class CausalConv1d(nn.Conv1d):
+class CausalDilationConv1d(nn.Conv1d):
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -12,7 +12,7 @@ class CausalConv1d(nn.Conv1d):
                  dilation=1,
                  groups=1,
                  bias=True):
-        super(CausalConv1d, self).__init__(
+        super(CausalDilationConv1d, self).__init__(
             in_channels,
             out_channels,
             kernel_size=kernel_size,
@@ -25,10 +25,9 @@ class CausalConv1d(nn.Conv1d):
         self.__padding = (kernel_size - 1) * dilation
 
     def forward(self, input):
-        return super(CausalConv1d, self).forward(F.pad(input, (self.__padding, 0)))
-
+        return super(CausalDilationConv1d, self).forward(F.pad(input, (self.__padding, 0)))
 if __name__ == '__main__':
     input = torch.from_numpy(np.ones((3, 2, 5))).float()
-    CaConv1d = CausalConv1d(in_channels=2, out_channels=6, kernel_size=2, dilation=1)
+    CaConv1d = CausalDilationConv1d(in_channels=2, out_channels=6, kernel_size=2, dilation=1)
     out = CaConv1d(input)
     print(out.size())
